@@ -2,11 +2,14 @@
   "expo": {
     "icon": "https://agent.expo.app/static/icon.png",
     "orientation": "default",
-    "scheme": "acme",
+    "scheme": "screensentinel",
     "userInterfaceStyle": "automatic",
     "android": {
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
+    },
+    "ios": {
+      "bundleIdentifier": "com.screensentinel.app"
     },
     "experiments": {
       "reactCompiler": true
@@ -15,7 +18,14 @@
       "expo-font",
       "expo-image",
       "expo-router",
-      "expo-web-browser"
+      "expo-web-browser",
+      "@bacons/apple-colors",
+      [
+        "./plugins/with-screen-time",
+        {
+          "familyControlsUsageDescription": "Screen Sentinel uses Screen Time to block distracting apps when Claude Code is not running."
+        }
+      ]
     ],
     "name": "Screen Sentinel",
     "owner": "bacon"

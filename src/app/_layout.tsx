@@ -1,57 +1,40 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Tabs as WebTabs } from "expo-router/tabs";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
-import { Platform, useWindowDimensions } from "react-native";
+import { Tabs as WebTabs } from "expo-router/tabs";
+import { Platform } from "react-native";
 
 export default function Layout() {
   return (
     <ThemeProvider>
-      <TabsLayout />
+      {process.env.EXPO_OS === "web" ? (
+        <WebTabsLayout />
+      ) : (
+        <NativeTabsLayout />
+      )}
     </ThemeProvider>
   );
 }
 
-function TabsLayout() {
-  if (process.env.EXPO_OS === "web") {
-    return <WebTabsLayout />;
-  } else {
-    return <NativeTabsLayout />;
-  }
-}
-
 function WebTabsLayout() {
-  const { width } = useWindowDimensions();
-  const isMd = width >= 768;
-  const isLg = width >= 1024;
-
   return (
     <WebTabs
       screenOptions={{
         headerShown: false,
-        ...(isMd
-          ? {
-              tabBarPosition: "left",
-              tabBarVariant: "material",
-              tabBarLabelPosition: isLg ? undefined : "below-icon",
-            }
-          : {
-              tabBarPosition: "bottom",
-            }),
       }}
     >
       <WebTabs.Screen
-        name="index"
+        name="(home)"
         options={{
-          title: "Home",
-          tabBarIcon: (props) => <MaterialIcons {...props} name="home" />,
+          title: "Dashboard",
+          tabBarIcon: (props) => <MaterialIcons {...props} name="shield" />,
         }}
       />
       <WebTabs.Screen
-        name="info"
+        name="(settings)"
         options={{
-          title: "Info",
-          tabBarIcon: (props) => <MaterialIcons {...props} name="info" />,
+          title: "Settings",
+          tabBarIcon: (props) => <MaterialIcons {...props} name="settings" />,
         }}
       />
     </WebTabs>
@@ -61,24 +44,41 @@ function WebTabsLayout() {
 function NativeTabsLayout() {
   return (
     <NativeTabs>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="(home)">
+        <NativeTabs.Trigger.Label>Dashboard</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           {...Platform.select({
-            ios: { sf: { default: "house", selected: "house.fill" } },
+            ios: {
+              sf: {
+                default: "shield.lefthalf.filled",
+                selected: "shield.lefthalf.filled",
+              },
+            },
             default: {
-              src: <NativeTabs.Trigger.VectorIcon family={MaterialIcons} name="home" />,
+              src: (
+                <NativeTabs.Trigger.VectorIcon
+                  family={MaterialIcons}
+                  name="shield"
+                />
+              ),
             },
           })}
         />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="info">
-        <NativeTabs.Trigger.Label>Info</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="(settings)">
+        <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           {...Platform.select({
-            ios: { sf: "cursorarrow.rays" },
+            ios: {
+              sf: { default: "gearshape", selected: "gearshape.fill" },
+            },
             default: {
-              src: <NativeTabs.Trigger.VectorIcon family={MaterialIcons} name="info" />,
+              src: (
+                <NativeTabs.Trigger.VectorIcon
+                  family={MaterialIcons}
+                  name="settings"
+                />
+              ),
             },
           })}
         />
